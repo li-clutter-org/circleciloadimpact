@@ -25,8 +25,7 @@ API_KEY="$LI_API_KEY"
 
 uri="https://api.loadimpact.com/v2/test-configs/$testId/start"
 
-echo "##teamcity[testStarted name='Load Impact performance test']"
-echo "##teamcity[progressMessage 'Kickoff performance test']"
+echo "Kickoff performance test"
 
 OUT=$(curl -qSfsw "\n%{http_code}" -u $API_KEY: -X POST https://api.loadimpact.com/v2/test-configs/$testId/start)
 
@@ -35,8 +34,8 @@ status=`echo  "${OUT}" | tail -n1`
 # Status 201 expected, 200 is just a current running test id
 if [[ $status -ne 201 ]] ; then
   perc="Could not start test $testId : $status \n $resp.Content"
-  echo "##teamcity[buildProblem description='"${perc}"']"
-  exit 0
+  echo "${perc}"
+  exit 2
 else
   tid=`echo "${OUT}" | head -n1 | jq '.id'`
 fi
@@ -52,12 +51,12 @@ until [ $status_text == "\"Running\"" ]; do
   ((t=t+10))
 
   if [[ $t -gt 300 ]] ; then
-    echo "##teamcity[buildProblem description='Timeout - test start > 5 min']" 
-    exit 0
+    echo "Timeout - test start > 5 min"
+    exit 3
   fi
 done
 
-echo "##teamcity[progressMessage 'Performance test running']"
+echo "Performance test running"
 
 # wait until completed
 
@@ -80,16 +79,13 @@ until [[ $(echo "$percentage==100" | bc -l) == 1 ]]; do
 
   if [[ $(echo "$maxVULoadTime>1000" | bc -l) == 1 ]] ; then 
     perc="VU Load Time exceeded limit of 1 sec: $maxVULoadTime"
-    echo "##teamcity[buildStatisticValue key='maxVULoadTime' value='$maxVULoadTime']"
-    echo "##teamcity[buildProblem description='$perc']"
-    exit 0
+    echo "$perc"
+    exit 4
   fi
 done
 
 #show results
-echo "##teamcity[progressMessage 'Show results']"
-echo "##teamcity[buildStatisticValue key='maxVULoadTime' value='$maxVULoadTime']"
+echo "Show results"
+echo "$maxVULoadTime"
 echo "Max VU Load Time: $maxVULoadTime"
 echo "Full results at https://app.loadimpact.com/test-runs/$tid"
-
-echo "##teamcity[testFinished name='Load Impact performance test']"
