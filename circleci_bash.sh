@@ -70,7 +70,7 @@ until [[ $(echo "$percentage==100" | bc -l) == 1 ]]; do
 
   percentage=`echo "${OUT}" | jq '.__li_progress_percent_total | max_by(.value)| .value'`
 
-  echo  "##teamcity[progressMessage 'Percentage completed $percentage']"
+  echo  "Percentage completed $percentage"
 
   # Get VU Load Time
   OUT=$(curl -qSfs -u $API_KEY: -X GET https://api.loadimpact.com/v2/tests/$tid/results?ids=__li_user_load_time)
