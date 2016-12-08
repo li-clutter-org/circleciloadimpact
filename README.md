@@ -1,7 +1,7 @@
 Automated Performance Testing with CircleCi
 ===========================================
 
-<embed src="media/image1.wmf" width="98" height="100" /> **CircleCi**
+<embed src="media/image1.png" width="98" height="100" /> **CircleCi**
 
 Load Impact integrates nicely with CircleCi, continuous integration and delivery platform. Using our robust and extensible APIs you can integrate Load Impact’s world-leading performance testing platform into your automated CircleCi build and test process.
 
