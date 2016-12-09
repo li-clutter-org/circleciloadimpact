@@ -1,25 +1,25 @@
-Automated Performance Testing with CircleCi
+Automated Performance Testing with CircleCI
 ===========================================
 
 <img src="media/image1.png" width="98" height="100" /> **CircleCi**
 
-Load Impact integrates nicely with CircleCi, continuous integration and delivery platform. Using our robust and extensible APIs you can integrate Load Impact’s world-leading performance testing platform into your automated CircleCi build and test process.
+Load Impact integrates nicely with CircleCI, one of the more popular continuous integration and delivery platforms in the software development industry. Using our robust and extensible APIs you can integrate Load Impact’s world-leading performance testing platform into your automated CircleCI build and test process.
 
 Load Impact covers your back with everything you need for Web, API and application performance testing. And test scripting is simple.
 
-To get started, try this sample of how to include performance testing in your CircleCi build setup.
+To get started, try this sample of how to include performance testing in your CircleCI build setup.
 
 Continuous Delivery. Continuous performance feedback. Simple.
 -------------------------------------------------------------
 
-This sample assumes you are familiar with [CircleCi](https://circleci.com/). We set up a new project with a simple build containing one test step to run the Load Impact performance test.
+This sample assumes you're familiar with [CircleCi](https://circleci.com/). We set up a new project with a simple build containing one test step to run the Load Impact performance test.
 
-Is also assumes you have a Load Impact account. [If not, go get one – it’s free](http://loadimpact.com).
+Is also assumes you have a Load Impact account. [If not, go get one – it’s free](http://loadimpact.com). We look at the integration in four steps.
 
-Set up your CircleCi build
+1. Set up your CircleCI build
 ==========================
 
-We created a CircleCi project which by default has the name we gave the repository on Github, loadimpact/circleciloadimpact. It’s very simple, everything is just default.
+This CircleCI project has the name we gave the repository on Github by default, loadimpact/circleciloadimpact. It’s very simple — everything is just default.
 
 <img src="media/image2.png" width="624" height="222" />
 
@@ -29,30 +29,30 @@ So slightly more interesting – let’s take a look at the settings of the buil
 
 <img src="media/image3.png" width="624" height="257" />
 
-First part, the dependency commands, we have added three necessary dependencies.
+First part, the dependency commands, we have three necessary dependencies.
 
-Curl, jq and bc. By default the current build environment on CircleCi already has curl and bc but we include them anyway.
+Curl, jq and bc. By default, the current build environment on CircleCI already has curl and bc, but we included them anyway.
 
 <img src="media/image4.png" width="624" height="260" />
 
-We add the install as pre-dependency commands.
+Add the install as pre-dependency commands.
 
 <img src="media/image5.png" width="624" height="212" />
 
-The test command itself is added. It just involves executing the circleci\_bash.sh script in the repository. So the test script itself is also part of the repository.
+Add the test command itself. It just involves executing the circleci\_bash.sh script in the repository. So the test script itself is also part of the repository.
 
 You can get the code for the circleci\_bash.sh script from github in the [loadimpact/circleciloadimpact](https://github.com/loadimpact/circleciloadimpact) repo where it is shared.
 
-Integrate with the Load Impact API
+2. Integrate with the Load Impact API
 ==================================
 
 Before we dive into the details – let’s get some essentials from your Load Impact account. We need the API key so you can access the API and a test to run.
 
-The API key you get in your Load Impact account when you are logged in
+The API key you get in your Load Impact account when you are logged in.
 
 <img src="media/image6.png" width="624" height="322" />
 
-Go to “Monitoring” on the left and click “Use REST API”.
+Go to “Monitoring” on the left and click “Use REST API.”
 
 Then copy it from the yellow text box.
 
@@ -60,26 +60,26 @@ Then copy it from the yellow text box.
 
 Just note that the API token is *longer* than the size of the box so make sure you get all of it!
 
-Now you need to know which test to run. You can list your test configurations using the API or the CLI if you want to but the simplest way is to open it directly in your account and copy the id from the URL. Underlined in red.
+Now you need to know which test to run. You can list your test configurations using the API or the CLI if you want, but the simplest way is to open it directly in your account and copy the id from the URL. That's underlined in red.
 
 <img src="media/image8.png" width="624" height="424" />
 
-So now you have a test id for the test you want to run in your build pipeline and your API key.
+Now you have a test id for the test you want to run in your build pipeline and your API key.
 
-All of the code is shared at Github for your download in the [loadimpact/circleciloadimpact](https://github.com/loadimpact/circleciloadimpact) repo!
+All the code is shared at Github for your download in the [loadimpact/circleciloadimpact](https://github.com/loadimpact/circleciloadimpact) repo!
 
-3a Edit the build settings to set the test Id and the API key
+3a. Edit the build settings to set the test Id and the API key
 =============================================================
 
-To avoid sticking sensitive information such as your test id and your API key into the script itself we use environment variables set in your build settings to hold these.
+To avoid sticking sensitive information such as your test id and your API key into the script itself, we use environment variables set in your build settings to hold these.
 
 Set the environment variable LI\_TEST\_ID to hold your test id and the environment variable LI\_API\_KEY to hold your API key.
 
 <img src="media/image9.png" width="624" height="188" />
 
-Now, let us look into the script code itself that actually executes the tests.
+Now, let's look into the script code itself that actually executes the tests.
 
-The code has four parts, the initial and then three stages “Kickoff performance test”, “Performance test running” and “Show results”. If you are familiar with CircleCi you know the output from the execution is visible in the build log when you execute your build including the Load Impact performance test.
+The code has four parts, the initial and then three stages “Kickoff performance test,” “Performance test running” and “Show results.” If you're familiar with CircleCI you know the output from the execution is visible in the build log when you execute your build including the Load Impact performance test.
 
 The initial part of the Bash code is where you set the test id and the API key.
 
@@ -100,7 +100,7 @@ uri="https://api.loadimpact.com/v2/test-configs/$testId/start"
 
 So make sure you set the LI\_TEST\_ID and LI\_API\_KEY environment variables!
 
-3b Kick off a performance test
+3b. Kickoff a performance test
 ==============================
 
 ```bash
@@ -138,21 +138,21 @@ done
 echo "Performance test running"
 ```
 
-We kick off the performance test by gluing together the URI for the [API to start the test](http://developers.loadimpact.com/api/#post-test-configs-id-start) and then write the status to stdout which can be seen in the CircleCi log.
+We kick off the performance test by gluing together the URI for the [API to start the test](http://developers.loadimpact.com/api/#post-test-configs-id-start) and then write the status to stdout which can be seen in the CircleCI log.
 
 We use curl to make the API call to start the test and then specifically check for the expected 201 response.
 
-If not there we will exit with an exit code of two (2) which will tell CircleCi the test has failed.
+If it's not there, we will exit with an exit code of two (2) — which will tell CircleCI the test has failed.
 
 If it is good, we parse the json response and extract the running test id.
 
-Then we let it take a maximum of five minutes for the test to actually kickoff. Since it can take Load Impact a couple of minutes to acquire and allocate all the resources (mainly load agents) needed we take some time to let the test reach the status of “Running”. The bigger the test, the more resources needed and the longer it can take. But remember, it’s a couple of minutes.
+Then we let it take a maximum of five minutes for the test to actually kickoff. Since it can take Load Impact a couple of minutes to acquire and allocate all the resources (mainly load agents) needed we take some time to let the test reach the status of “Running.” The bigger the test, the more resources needed and the longer it can take. But remember, it’s a couple of minutes.
 
-We get that status of the test by [calling the API](http://developers.loadimpact.com/api/#get-tests-id) and parsing the json response to check for the status in the response. If it takes too long we exit with exit code 3 to tell CircleCi it failed.
+We get that status of the test by [calling the API](http://developers.loadimpact.com/api/#get-tests-id) and parsing the json response to check for the status in the response. If it takes too long we exit with exit code 3 to tell CircleCI it failed.
 
 The last thing we do is to write a message to stdout that the test is running.
 
-3c The test is running
+3c. The test is running
 ======================
 
 ```bash
@@ -183,7 +183,7 @@ until [[ $(echo "$percentage==100" | bc -l) == 1 ]]; do
 done
 ```
 
-So now your Load Impact performance test is running!
+So, now your Load Impact performance test is running!
 
 This time we wait until the test has completed, reached the percentage completed value of 100% with a slightly longer sleep between refreshing status calls.
 
@@ -195,9 +195,9 @@ We included an example of making a threshold from the [VU Load Time (please read
 
 We get the value by calling the same API as before but for the VU Load Time result, parse the json and get the max value by some jq magic.
 
-If the value exceeds 1 second we exit the build step and fail it by setting the exit code to 4. This tells CircleCi it failed and we also write a message on stdout.
+If the value exceeds 1 second we exit the build step and fail it by setting the exit code to 4. This tells CircleCI it failed and we also write a message on stdout.
 
-3d Show the results
+3d. Show the results
 ===================
 
 ```bash
@@ -210,10 +210,10 @@ echo "Full results at https://app.loadimpact.com/test-runs/$tid"
 
 Finally, we show the results and output the max VU Load Time. It can of course be any result but as a sample. You can use this result to decide on further actions in your build as well but that is outside the scope of this sample. And of course we tack on a direct link to the full results and analysis in Load Impact.
 
-Finally, executing the build in CircleCi.
+Executing the build in CircleCI.
 =========================================
 
-Any update in the repository for the build project, in this case only the test script itself, will trigger a build in CircleCi using default settings. Or else you can always start a build manually from CircleCi.
+Any update in the repository for the build project, in this case only the test script itself, will trigger a build in CircleCI using default settings. Or else you can always start a build manually from CircleCI.
 
 <img src="media/image10.png" width="624" height="222" />
 
@@ -221,13 +221,13 @@ A couple of completed builds.
 
 <img src="media/image11.png" width="624" height="316" />
 
-Once the test is actually running CircleCi will show the output from the test.
+Once the test is actually running CircleCI will show the output from the test.
 
-And looking into the details of the build log itself we see the steps and the individual messages.
+And looking into the details of the build log itself, we see the steps and the individual messages.
 
 <img src="media/image12.png" width="624" height="316" />
 
-there’s also a direct link to the full results and analysis in Load Impact where you can always find all the results of all your tests.
+There’s also a direct link to the full results and analysis in Load Impact where you can always find all the results of all your tests.
 
 You can add/update/delete tests, user scenarios and data stores using the API and CLI, even stick all of it in your SCM of choice and let all of it be part of your build.
 
