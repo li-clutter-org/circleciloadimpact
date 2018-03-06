@@ -44,7 +44,7 @@ fi
 
 t=0
 status_text="\"NOT_YET\""
-until [ $status_text == "\"Running\"" ]; do
+until [[ $status_text == "\"Running\"" ]]; do
   sleep 10s
   OUT=$(curl -qSfsw '\n%{http_code}' -u $API_KEY: -X GET https://api.loadimpact.com/v2/tests/$tid/)
   status_text=`echo  "${OUT}" | head -n1 | jq '.status_text'`
